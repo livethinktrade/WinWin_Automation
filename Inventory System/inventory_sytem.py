@@ -27,6 +27,10 @@ inventory = inventory[inventory['cases'] != 0]
 # ordering all nan value to the top
 inventory = inventory.sort_values(by=['Season'])
 
+# dropping Nan values in the Code-Qb column
+
+inventory = inventory.dropna(subset=['Code - QB'])
+
 date = datetime.datetime.today().strftime('%Y-%m-%d')
 
 file_name = f'Inventory_{date}.xlsx'
