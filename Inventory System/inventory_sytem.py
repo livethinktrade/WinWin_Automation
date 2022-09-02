@@ -60,6 +60,8 @@ wb = openpyxl.load_workbook(file_name)
 ws = wb['Inventory']
 
 # adding filters
-ws.auto_filter.ref = f"A1:L10000"
+ws.auto_filter.ref = f"A1:K10000"
 
 wb.save(file_name)
+
+wb.close()
