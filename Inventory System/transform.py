@@ -1,14 +1,15 @@
 import pandas as pd
 import os
+from datetime import datetime
 
 
 class Transform:
 
     def __init__(self, support_sheet=None):
 
-        self.support_sheet = pd.read_excel(f"{support_sheet}")
+        self.support_sheet = support_sheet
 
-    def inventory_asset_valuation(self, file):
+    def inventory_asset_valuation(self, file, date):
 
         inventory_val = pd.read_csv(file)
 
@@ -34,11 +35,11 @@ class Transform:
         #
         # inventory_val = inventory_val.merge(support_sheet, left_on='Code', right_on='Code', how='left')
 
+        month = int(date[5:7])
+        year = int(date[:4])
+
+        inventory_val['date'] = datetime(year, month, 1)
+
+        inventory_val = inventory_val.reset_index(drop=True)
+
         return inventory_val
-
-
-a = Transform('QB Item COde with CVS Price.xlsx')
-
-test = a.inventory_asset_valuation(r'C:\Users\User1\OneDrive\WinWin Staff Folders\Michael\Automation\Inventory System\Inventory Asset Valuation Data\2021.01.csv')
-
-test.to_excel('sample.xlsx', index=False)

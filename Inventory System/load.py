@@ -10,24 +10,33 @@ from psycopg2.extensions import register_adapter, AsIs
 psycopg2.extensions.register_adapter(np.int64, psycopg2._psycopg.AsIs)
 
 
-def asset_valuation_insert(on_hand, asset_valuation, code, date, connection_pool):
-    connection = connection_pool.getconn()
-    cursor = connection.cursor()
-    cursor.execute(
-        "INSERT INTO inventory_system.asset_valuation (on_hand, asset_valuation, code, date) values (%s,%s,%s,%s)",
-        (on_hand, asset_valuation, code, date))
+class LoadData:
 
-    connection.commit()
-    cursor.close()
-    connection_pool.putconn(connection)
+    def asset_valuation_insert(self, on_hand, asset_value, code, date, connection_pool):
+        connection = connection_pool.getconn()
+        cursor = connection.cursor()
+        cursor.execute(
+            "INSERT INTO inventory_system.asset_valuation (on_hand, asset_value, code, date) values (%s,%s,%s,%s)",
+            (on_hand, asset_value, code, date))
+
+        connection.commit()
+        cursor.close()
+        connection_pool.putconn(connection)
+
+    def inventory_status_insert(self, code_qb, container_number, shipping_company, item_desc, cases,
+                                case_qty, est_deliv_date, bol, status, notes, connection_pool):
+        connection = connection_pool.getconn()
+        cursor = connection.cursor()
+        cursor.execute(
+            """INSERT INTO inventory_system.asset_valuation (on_hand, asset_value, code, date) 
+               values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+            (code_qb, container_number, shipping_company, item_desc, cases, case_qty, est_deliv_date, bol, status, notes))
+
+        connection.commit()
+        cursor.close()
+        connection_pool.putconn(connection)
 
 
-# def size_table_update(code, size, connection_pool):
-#     connection = connection_pool.getconn()
-#     cursor = connection.cursor()
-#     cursor.execute(
-#         f"update item_size set size = '{size}' where code = '{code}'")
-#
-#     connection.commit()
-#     cursor.close()
-#     connection_pool.putconn(connection)
+
+
+
